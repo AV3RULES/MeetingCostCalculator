@@ -6,20 +6,29 @@ import TabBarIcon from '../components/TabBarIcon';
 import HomeScreen from '../screens/HomeScreen';
 import LinksScreen from '../screens/LinksScreen';
 import SettingsScreen from '../screens/SettingsScreen';
+import Attendees from '../screens/Attendees';
+import TimeTracking from '../screens/TimeTracking';
+import MeetingSummary from '../screens/MeetingSummary';
 
-const HomeStack = createStackNavigator({
+const StartMeetingStack = createStackNavigator({
   Home: HomeScreen,
+  Attendees,
+  TimeTracking,
+  MeetingSummary,
+
+},{
+  initialRouteName: 'Attendees'
 });
 
-HomeStack.navigationOptions = {
-  tabBarLabel: 'Home',
+StartMeetingStack.navigationOptions = {
+  tabBarLabel: 'Start a meeting',
   tabBarIcon: ({ focused }) => (
     <TabBarIcon
       focused={focused}
       name={
         Platform.OS === 'ios'
-          ? `ios-information-circle${focused ? '' : '-outline'}`
-          : 'md-information-circle'
+          ? `ios-contacts${focused ? '' : '-outline'}`
+          : 'md-contacts'
       }
     />
   ),
@@ -54,7 +63,7 @@ SettingsStack.navigationOptions = {
 };
 
 export default createBottomTabNavigator({
-  HomeStack,
+  StartMeetingStack,
   LinksStack,
   SettingsStack,
 });
