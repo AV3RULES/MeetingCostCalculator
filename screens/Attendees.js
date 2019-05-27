@@ -80,8 +80,10 @@ class Attendees extends Component {
                 <View style={[styles.startButton]}>
                     <CoolButton
                         label={'Start Meeting'}
-                        action={ () => this.props.navigation.navigate('TimeTracking', {
-                            totalCostPerHour: this.state.totalCostPerHour})}  // calculateTotalCost()
+                        action={ () => {
+                            this.state.attendees.map((attendee) =>(this.setState({totalCostPerHour: this.state.totalCostPerHour + attendee.cost})))
+                            this.props.navigation.navigate('TimeTracking', {totalCostPerHour: this.state.totalCostPerHour})
+                        }}
                     />
                 </View>
                 <ScrollView style={[styles.attendeesContainer]}>
