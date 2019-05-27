@@ -59,7 +59,7 @@ class Attendees extends Component {
                 ],
             name: '',
             cost: '',
-            totalCostPerHour: 0,
+            totalCostPerHour: 250,
         };
     }
 
@@ -81,7 +81,7 @@ class Attendees extends Component {
                     <CoolButton
                         label={'Start Meeting'}
                         action={ () => this.props.navigation.navigate('TimeTracking', {
-                            totalCostPerHour: this.calculateTotalCost})}
+                            totalCostPerHour: this.state.totalCostPerHour})}  // calculateTotalCost()
                     />
                 </View>
                 <ScrollView style={[styles.attendeesContainer]}>

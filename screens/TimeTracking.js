@@ -13,8 +13,7 @@ class TimeTracking extends Component {
 
         this.state = {
             totalCost: 0.0,
-            // costPerHour: this.props.navigation.getParam('totalCostPerHour', 0),
-            costPerHour: 250,
+            costPerHour: this.props.navigation.getParam('totalCostPerHour', 0),
         }
     }
 
