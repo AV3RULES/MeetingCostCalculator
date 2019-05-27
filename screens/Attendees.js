@@ -1,6 +1,29 @@
 import React, {Component} from 'react';
-import {View,  ScrollView, StyleSheet, Text, Image, TouchableOpacity} from 'react-native';
+import {View,  ScrollView, StyleSheet, Text, Image, TouchableOpacity, TextInput} from 'react-native';
 import CoolButton from '../components/CoolButton';
+
+const AttendantForm = ({name, onNameChange, cost, onCostChange, addAttendee}) => (
+    <View style={[styles.form]}>
+        <View style={styles.inputWrapper}>
+            <TextInput
+                placeholder={"Name of the Atendee"}
+                style={[styles.inputText]}
+                value={ name }
+                onChangeText={onNameChange}/>
+            <TextInput
+                value={cost}
+                placeholder={"Cost per hour"}
+                style={[styles.inputText]}
+                keyboardType = 'number-pad'
+                onChangeText={onCostChange}/>
+        </View>
+        <TouchableOpacity onPress={addAttendee}>
+            <View style={styles.containerButton}>
+                <Text style={[styles.addButton]}>+</Text>
+            </View>
+        </TouchableOpacity>
+    </View>
+);
 
 class Attendees extends Component {
 
@@ -33,8 +56,21 @@ class Attendees extends Component {
                         name: "Martin Fowler",
                         cost: 150
                     },
-                ]};
+                ],
+            name: '',
+            cost: '',
+            totalCostPerHour: 0,
+        };
     }
+
+    addAttendee = (name, cost) => (
+        this.setState({attendees: [...this.state.attendees, {name, cost}], name: '', cost: '', totalCostPerHour: 0})
+    );
+
+    calculateTotalCost = () => (
+        this.state.attendees.map(
+            (attendee) =>(this.setState({totalCostPerHour: this.state.totalCostPerHour + attendee.cost})))
+    );
 
     render() {
         return (
@@ -42,7 +78,9 @@ class Attendees extends Component {
                 <View style={[styles.startButton]}>
                     <CoolButton
                         label={'Start Meeting'}
-                        action={ () => this.props.navigation.navigate('TimeTracking') }/>
+                        action={ () => this.props.navigation.navigate('TimeTracking', {
+                            totalCostPerHour: this.calculateTotalCost})}
+                    />
                 </View>
                 <ScrollView style={[styles.attendeesContainer]}>
                     {
@@ -62,16 +100,13 @@ class Attendees extends Component {
                         )
                     }
                 </ScrollView>
-                <View style={[styles.form]}>
-                    <View style={styles.inputWrapper}>
-
-                    </View>
-                    <TouchableOpacity>
-                        <View style={styles.containerButton}>
-                            <Text style={[styles.textButton]}>+</Text>
-                        </View>
-                    </TouchableOpacity>
-                </View>
+                <AttendantForm
+                    name={this.state.name}
+                    onNameChange={name => this.setState({name})}
+                    cost={this.state.cost}
+                    onCostChange={ cost => this.setState({cost})}
+                    addAttendee={() => this.addAttendee(this.state.name, this.state.cost)}
+                />
             </View>
         );
     }
@@ -110,21 +145,31 @@ const styles = StyleSheet.create({
     },
     inputWrapper:{
         flex: 1,
-        backgroundColor: 'orange',
+    },
+    inputText: {
+        height: 45,
+        padding: 10,
+        backgroundColor: '#ededed',
+        borderColor: '#ddd',
+        borderWidth: 1,
+        borderRadius: 10,
+        fontSize: 20,
+        marginBottom: 5,
     },
     containerButton: {
-        backgroundColor: 'lightblue',
+        backgroundColor: '#ededed',
         width: 100,
         height: 100,
         borderRadius: 20,
-        borderColor: 'red',
+        borderColor: '#ddd',
         borderWidth: 1,
         marginLeft: 10,
         justifyContent: 'center',
         alignItems: 'center',
     },
-    textButton: {
-      fontSize: 30,
+    addButton: {
+        fontSize: 28,
+        lineHeight: 28,
     },
 });
 
