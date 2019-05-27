@@ -46,7 +46,7 @@ class TimeTracking extends Component {
                     />
                 </View>
                 <View>
-                    <Text style={[styles.costText]}>{this.state.totalCost.toFixed(2)}/€</Text>
+                    <Text style={[styles.costText]}>{this.state.totalCost.toFixed(2)} €</Text>
                 </View>
             </View>
         );

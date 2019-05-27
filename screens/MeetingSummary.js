@@ -21,7 +21,7 @@ class MeetingSummary extends Component {
                         action={ () => this.props.navigation.navigate('Attendees') }/>
                 </View>
                 <View>
-                    <Text style={[styles.costText]}>{this.state.totalCost.toFixed(2)}/€</Text>
+                    <Text style={[styles.costText]}>{this.state.totalCost.toFixed(2)} €</Text>
                 </View>
             </View>
         );
