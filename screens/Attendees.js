@@ -63,9 +63,11 @@ class Attendees extends Component {
         };
     }
 
-    addAttendee = (name, cost) => (
-        this.setState({attendees: [...this.state.attendees, {name, cost}], name: '', cost: '', totalCostPerHour: 0})
-    );
+    addAttendee = (name, cost) => {
+        if(name && cost){
+            this.setState({attendees: [...this.state.attendees, {name, cost}], name: '', cost: '', totalCostPerHour: 0})
+        }
+    }
 
     calculateTotalCost = () => (
         this.state.attendees.map(
