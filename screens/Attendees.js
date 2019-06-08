@@ -1,29 +1,17 @@
 import React, {Component} from 'react';
-import {View,  ScrollView, StyleSheet, Text, Image, TouchableOpacity, TextInput} from 'react-native';
+import {
+    View,
+    ScrollView,
+    StyleSheet,
+    Text,
+    Image,
+    TouchableOpacity,
+    TextInput
+} from 'react-native';
 import CoolButton from '../components/CoolButton';
+import {connect} from 'react-redux';
+import {createAddAttendeeAction} from "../model/actions/actions";
 
-const AttendantForm = ({name, onNameChange, cost, onCostChange, addAttendee}) => (
-    <View style={[styles.form]}>
-        <View style={styles.inputWrapper}>
-            <TextInput
-                placeholder={"Name of the Atendee"}
-                style={[styles.inputText]}
-                value={ name }
-                onChangeText={onNameChange}/>
-            <TextInput
-                value={cost}
-                placeholder={"Cost per hour"}
-                style={[styles.inputText]}
-                keyboardType = 'number-pad'
-                onChangeText={onCostChange}/>
-        </View>
-        <TouchableOpacity onPress={addAttendee}>
-            <View style={styles.containerButton}>
-                <Text style={[styles.addButton]}>+</Text>
-            </View>
-        </TouchableOpacity>
-    </View>
-);
 
 class Attendees extends Component {
 
@@ -33,62 +21,32 @@ class Attendees extends Component {
 
     constructor() {
         super();
-
-        this.state = {
-            attendees: [
-                    {
-                        name: "Juan",
-                        cost: 80
-                    },
-                    {
-                        name: "Pablo",
-                        cost: 80
-                    },
-                    {
-                        name: "Miguel",
-                        cost: 45
-                    },
-                    {
-                        name: "Avelino",
-                        cost: 60
-                    },
-                    {
-                        name: "Martin Fowler",
-                        cost: 150
-                    },
-                ],
-            name: '',
-            cost: '',
-            totalCostPerHour: 250,
-        };
+        this.state = { name: '', cost: ''};
     }
 
-    addAttendee = (name, cost) => {
+    addAttendee(name, cost) {
         if(name && cost){
-            this.setState({attendees: [...this.state.attendees, {name, cost}], name: '', cost: '', totalCostPerHour: 0})
+            this.props.dispatchAddAttendee(name, cost);
+            this.setState({name: '', cost: ''});
         }
     }
 
-    calculateTotalCost = () => (
-        this.state.attendees.map(
-            (attendee) =>(this.setState({totalCostPerHour: this.state.totalCostPerHour + attendee.cost})))
-    );
-
     render() {
+
+        const {attendees} = this.props;
+
         return (
             <View style={[styles.container]}>
                 <View style={[styles.startButton]}>
                     <CoolButton
                         label={'Start Meeting'}
-                        action={ () => {
-                            this.state.attendees.map((attendee) =>(this.setState({totalCostPerHour: this.state.totalCostPerHour + attendee.cost})))
-                            this.props.navigation.navigate('TimeTracking', {totalCostPerHour: this.state.totalCostPerHour})
+                        action={ () => {this.props.navigation.navigate('TimeTracking')
                         }}
                     />
                 </View>
                 <ScrollView style={[styles.attendeesContainer]}>
                     {
-                        this.state.attendees.map(
+                        attendees.map(
                             (attendee, index) =>(
                                 <View key={index} style={[styles.attendee]}>
                                     <Image
@@ -177,4 +135,35 @@ const styles = StyleSheet.create({
     },
 });
 
-export default Attendees;
+const mapStateToProps = (state) => {
+    return ({ attendees: state.attendees });
+};
+
+const mapDispatchToProps = {
+    dispatchAddAttendee: (name, cost) => createAddAttendeeAction(name, cost)
+};
+
+const AttendantForm = ({name, onNameChange, cost, onCostChange, addAttendee}) => (
+    <View style={[styles.form]}>
+        <View style={styles.inputWrapper}>
+            <TextInput
+                placeholder={"Name of the Atendee"}
+                style={[styles.inputText]}
+                value={ name }
+                onChangeText={onNameChange}/>
+            <TextInput
+                value={cost}
+                placeholder={"Cost per hour"}
+                style={[styles.inputText]}
+                keyboardType = 'number-pad'
+                onChangeText={onCostChange}/>
+        </View>
+        <TouchableOpacity onPress={addAttendee}>
+            <View style={styles.containerButton}>
+                <Text style={[styles.addButton]}>+</Text>
+            </View>
+        </TouchableOpacity>
+    </View>
+);
+
+export default connect(mapStateToProps, mapDispatchToProps)(Attendees);
