@@ -1,4 +1,11 @@
 export const ADD_ATTENDEE = 'ADD_ATTENDEE';
+export const UPDATE_MEETING_COST = 'UPDATE_MEETING_COST';
+export const RESET_MEETING = 'RESET_MEETING';
+
+const initialState = [
+    {name: 'Juan', cost: '55'},
+    {name: 'Pablo', cost: '75'},
+];
 
 export function createAddAttendeeAction(name, cost) {
     return {
@@ -7,5 +14,19 @@ export function createAddAttendeeAction(name, cost) {
             name,
             cost
         },
+    }
+}
+
+export function updateMeetingCost(currentCost) {
+    return {
+        type: UPDATE_MEETING_COST,
+        currentCost,
+    }
+}
+
+
+export function resetMeeting() {
+    return {
+        type: RESET_MEETING,
     }
 }

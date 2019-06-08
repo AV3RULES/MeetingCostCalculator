@@ -2,6 +2,8 @@ import React, {Component} from 'react';
 import {StyleSheet, View, Text} from "react-native";
 import CoolButton from "../components/CoolButton";
 import {NavigationEvents} from 'react-navigation';
+import {connect} from 'react-redux';
+import { updateMeetingCost } from '../model/actions/actions';
 
 class TimeTracking extends Component {
 
@@ -14,15 +16,15 @@ class TimeTracking extends Component {
 
         this.state = {
             currentCost: 0,
-            costPerSecond: 0.134,
             startTime: Date.now(),
         }
     }
 
     tick() {
         const timeInSeconds = (Date.now() - this.state.startTime)/1000;
+
         this.setState({
-            currentCost: this.state.costPerSecond * timeInSeconds
+            currentCost: this.props.costPerSecond * timeInSeconds
         }, () => {
             this.timer = setTimeout(() => this.tick(), 1000)
         });
@@ -45,10 +47,14 @@ class TimeTracking extends Component {
                     onDidBlur={() => console.log('did blur')}
                 />
 
-                <Text style={[styles.costText]}>{this.state.currentCost.toFixed(2)} €</Text>
+                <Text style={[styles.costText]}>{ Number(this.state.currentCost).toFixed(2)} €</Text>
                 <CoolButton
                     label={'Stop Meeting'}
-                    action={ () => this.props.navigation.navigate('MeetingSummary')}
+                    action={ () => {
+                        this.props.dispatchUpdateMeetingCost(this.state.currentCost);
+                        this.props.navigation.navigate('MeetingSummary')
+                        }
+                    }
                 />
             </View>
         );
@@ -69,5 +75,19 @@ const styles = StyleSheet.create({
     },
 });
 
+const mapStateToProps = (state) => {
 
-export default TimeTracking;
+    const costPerSecond = state.attendees
+        .map(attendee => Number(attendee.cost))
+        .reduce((costPerHour, cost) => costPerHour + cost, 0) / (60 * 60);
+
+    console.log('cost per second: ', costPerSecond);
+
+    return({ costPerSecond });
+};
+
+const mapDispatchToProps = {
+    dispatchUpdateMeetingCost: (cost) => updateMeetingCost(cost)
+};
+
+export default connect(mapStateToProps, mapDispatchToProps)(TimeTracking);

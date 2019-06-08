@@ -135,14 +135,6 @@ const styles = StyleSheet.create({
     },
 });
 
-const mapStateToProps = (state) => {
-    return ({ attendees: state.attendees });
-};
-
-const mapDispatchToProps = {
-    dispatchAddAttendee: (name, cost) => createAddAttendeeAction(name, cost)
-};
-
 const AttendantForm = ({name, onNameChange, cost, onCostChange, addAttendee}) => (
     <View style={[styles.form]}>
         <View style={styles.inputWrapper}>
@@ -165,5 +157,13 @@ const AttendantForm = ({name, onNameChange, cost, onCostChange, addAttendee}) =>
         </TouchableOpacity>
     </View>
 );
+
+const mapStateToProps = (state) => {
+    return ({ attendees: state.attendees });
+};
+
+const mapDispatchToProps = {
+    dispatchAddAttendee: (name, cost) => createAddAttendeeAction(name, cost)
+};
 
 export default connect(mapStateToProps, mapDispatchToProps)(Attendees);
