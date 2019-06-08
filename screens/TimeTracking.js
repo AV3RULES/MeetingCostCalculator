@@ -1,6 +1,7 @@
 import React, {Component} from 'react';
 import {StyleSheet, View, Text} from "react-native";
 import CoolButton from "../components/CoolButton";
+import {NavigationEvents} from 'react-navigation';
 
 class TimeTracking extends Component {
 
@@ -12,41 +13,43 @@ class TimeTracking extends Component {
         super(props);
 
         this.state = {
-            totalCost: 0.0,
-            costPerHour: this.props.navigation.getParam('totalCostPerHour', 0),
+            currentCost: 0,
+            costPerSecond: 0.134,
+            startTime: Date.now(),
         }
     }
 
-    componentDidMount() {
-        this.timerID = setInterval(
-            () => this.tick(),
-            1000
-        );
-    }
-
-    componentWillMount() {
-        clearInterval(this.timerID);
-    }
-
     tick() {
+        const timeInSeconds = (Date.now() - this.state.startTime)/1000;
         this.setState({
-            totalCost: this.state.totalCost + (this.state.costPerHour/3600),
-        })
+            currentCost: this.state.costPerSecond * timeInSeconds
+        }, () => {
+            this.timer = setTimeout(() => this.tick(), 1000)
+        });
     }
 
     render() {
         return (
             <View style={[styles.container]}>
-                <View style={[styles.startButton]}>
-                    <CoolButton
-                        label={'Stop Meeting'}
-                        action={ () => this.props.navigation.navigate('MeetingSummary', {
-                            totalCost: this.state.totalCost})}
-                    />
-                </View>
-                <View>
-                    <Text style={[styles.costText]}>{this.state.totalCost.toFixed(2)} €</Text>
-                </View>
+
+                <NavigationEvents
+                    onWillFocus={() => {
+                        console.log('will focus');
+                        this.tick();
+                    }}
+                    onDidFocus={() => console.log('did focus')}
+                    onWillBlur={() => {
+                        console.log('will blur');
+                        clearTimeout(this.timer);
+                    }}
+                    onDidBlur={() => console.log('did blur')}
+                />
+
+                <Text style={[styles.costText]}>{this.state.currentCost.toFixed(2)} €</Text>
+                <CoolButton
+                    label={'Stop Meeting'}
+                    action={ () => this.props.navigation.navigate('MeetingSummary')}
+                />
             </View>
         );
     }
@@ -55,18 +58,14 @@ class TimeTracking extends Component {
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        flexDirection: 'column',
-        alignItems: 'center',
-    },
-    startButton: {
-        flex: 1,
-        maxHeight: 80,
+        backgroundColor: '#fff',
         justifyContent: 'center',
         alignItems: 'center',
     },
     costText:  {
         fontSize: 50,
-        color: '#2f95dc'
+        fontWeight: 'bold',
+        padding: 20,
     },
 });
 

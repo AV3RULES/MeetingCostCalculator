@@ -3,8 +3,8 @@ import {StyleSheet, Text, TouchableOpacity, View} from 'react-native';
 
 const CoolButton = ({label, action}) => (
     <TouchableOpacity onPress={ action }>
-        <View style={[styles.startButton]}>
-            <Text style={[styles.startText]}>
+        <View style={[styles.button]}>
+            <Text style={[styles.text]}>
                 {label}
             </Text>
         </View>
@@ -12,13 +12,12 @@ const CoolButton = ({label, action}) => (
 );
 
 const styles = StyleSheet.create({
-    startButton: {
-
+    button: {
         textAlign: 'center',
         backgroundColor: '#2f95dc',
         borderRadius: 10,
     },
-    startText: {
+    text: {
         color: 'white',
         fontSize: 30,
         padding: 10,

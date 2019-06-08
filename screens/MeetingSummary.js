@@ -15,14 +15,10 @@ class MeetingSummary extends Component {
     render() {
         return (
             <View style={[styles.container]}>
-                <View style={[styles.startButton]}>
-                    <CoolButton
-                        label={'Reset'}
-                        action={ () => this.props.navigation.navigate('Attendees') }/>
-                </View>
-                <View>
-                    <Text style={[styles.costText]}>{this.state.totalCost.toFixed(2)} €</Text>
-                </View>
+                <Text style={[styles.costText]}>{this.state.totalCost.toFixed(2)} €</Text>
+                <CoolButton
+                    label={'Reset'}
+                    action={ () => this.props.navigation.navigate('Attendees') }/>
             </View>
         );
     }
@@ -31,12 +27,7 @@ class MeetingSummary extends Component {
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        flexDirection: 'column',
-        alignItems: 'center',
-    },
-    startButton: {
-        flex: 1,
-        maxHeight: 80,
+        backgroundColor: '#fff',
         justifyContent: 'center',
         alignItems: 'center',
     },
